@@ -29,6 +29,7 @@ app.get("/api", (req, res) => {
   console.log({ date, utc, unix });
 
   // An empty date parameter returns the current time in a JSON object with a unix key and utc
+  // An empty date parameter should return the current time in a JSON object with a utc key
   return res.json({
     unix: date.getTime(),
     utc: date.toUTCString()
@@ -36,30 +37,37 @@ app.get("/api", (req, res) => {
 });
 
 // your first API endpoint... 
-app.get("/api/:date", function (req, res) {
-  let date = req.params.date;
+app.get("/api/:date", (req, res) => {
+  // Your project can handle dates that can be successfully parsed by new Date(date_string)
+  // Based on input variables below will be reassigned by if, else if, else statements
+  let date_string = req.params.date;
   let unix, utc;
 
-  if (date instanceof Date) {
-    utc = date.toUTCString();
-    unix = date.getTime();
+  if (date_string instanceof Date) {
+    utc = date_string.toUTCString();
+    unix = date_string.getTime();
 
-  } else if (!isNaN(date)) {
-    unix = parseInt(date);
-    date = new Date(unix);
-    utc = date.toUTCString();
+    // A request to /api/:date? with a valid date should return a JSON object with a utc key that is a string of the input date in the format: Thu, 01 Jan 1970 00:00:00 GMT
+  } else if (!isNaN(date_string)) {
+    unix = parseInt(date_string);
+    date_string = new Date(unix);
+    utc = date_string.toUTCString();
 
+    // A request to /api/:date? with a valid date should return a JSON object with a unix key that is a Unix timestamp of the input date in milliseconds (as type Number)
+    // A request to /api/1451001600000 should return { unix: 1451001600000, utc: "Fri, 25 Dec 2015 00:00:00 GMT" }
   } else {
-    date = new Date(date);
-    utc = date.toUTCString();
-    unix = date.getTime();
+    date_string = new Date(date_string);
+    utc = date_string.toUTCString();
+    unix = date_string.getTime();
   }
 
   if (utc == "Invalid Date") {
     console.log("Error");
+    // If the input date string is invalid, the API returns an object having the structure { error : "Invalid Date" }
     res.json({
       error: "Invalid Date",
     });
+
   } else {
     res.json({ unix, utc });
   }
