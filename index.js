@@ -41,10 +41,9 @@ app.get("/api/hello", function (req, res) {
 });
 
 // listen for requests :)
+// const PORT = "8080"; // for local runs
 var listener = app.listen(process.env.PORT, function () {
-  const PORT = 8080; // for local runs
-  // const po = listener.address().port;
-  // console.log('Your app is listening on port ' + listener.address().port);
+  console.log('Your app is listening on port ' + listener.address().port);
   // console.log(`server live now on http://localhost:${process.env.PORT}`) // for local env var PORT=8080
-  console.log(`DEBUGGING ON LOCAL: http://localhost:${listener.address().port}`) // for local runs
+  // console.log(`DEBUGGING ON LOCAL: http://localhost:${listener.address().port}`) // for local runs
 });
