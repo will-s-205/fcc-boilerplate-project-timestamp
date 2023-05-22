@@ -22,7 +22,9 @@ h3 {
 }
 
 hr {
-	margin: 25px;
+	margin: 25px auto;
+	height: 2px;
+	width: 100px;
 }
 
 .footer {
